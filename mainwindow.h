@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-
+#include "stdafx.h"
 namespace Ui {
 class MainWindow;
 }
