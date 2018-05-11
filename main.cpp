@@ -1,12 +1,20 @@
-#include "mainwindow.h"
 #include <QApplication>
-#include "thingadd.h"
 #include <QMessageBox>
 #include <QFile>
 
+#include "mainwindow.h"
+#include "thingadd.h"
+#include "login.h"
+#ifndef STDAFX_H
+#include "stdafx.h"
+#endif
+
 map<QString, vector<ll> > TagToThing;
 QString DATA_FILE = "./data/data.txt";
-QString Now_User;
+
+extern QString Now_User;
+extern vector<QString> Tag_Sum;
+
 class Thing{
 public:
     QString Thing_name, belonger;
@@ -34,15 +42,19 @@ public:
     void show(){
         return ;
     }
-    void addTag(QString tag){
-        if(TagToThing.find(tag)!=TagToThing.end()){
-            TagToThing[tag].push_back(Thing_num);
-        }else{
-            TagToThing[tag]=vector<ll> {Thing_num};
+    void addTag(vector<int> &tmp){
+        for(auto i:tmp){
+            QString tag = Tag_Sum[i];
+            if(TagToThing.find(tag)!=TagToThing.end()){
+                TagToThing[tag].push_back(Thing_num);
+            }else{
+                TagToThing[tag]=vector<ll> {Thing_num};
+            }
+            if(find(Tag.begin(), Tag.end(), tag)==Tag.end()){
+                Tag.push_back(tag);
+            }
         }
-        if(find(Tag.begin(), Tag.end(), tag)==Tag.end()){
-            Tag.push_back(tag);
-        }
+
     }
 private:
     void text(){
@@ -60,14 +72,15 @@ public:
             ll money=_add_tmp.money;
             int New=_add_tmp.New;
             DATA.push_back(Thing(name_tmp, New, Now_User, money));
-            //QString out;out.append(name_tmp);out.append(QString::number(money)); out.append(QString::number(New));
-            //QMessageBox::warning(&_add_tmp, "a",out, QMessageBox::Yes);
+            (DATA.end()-1)->addTag(_add_tmp.Tag);
         }
     }
     void removThing(){
         //wait to add data
         return;
     }
+private:
+
 };
 
 int main(int argc, char *argv[])
@@ -76,11 +89,12 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     MainWindow w;
     MainData DATA;
+    Login aa;
 
     //exe
     w.setWindowTitle("你好");
     w.show();
-    DATA.addThing();
+    aa.show();
 
     return a.exec();
 }

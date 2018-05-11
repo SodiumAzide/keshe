@@ -38,4 +38,5 @@ HEADERS += \
 FORMS += \
         mainwindow.ui \
     thingadd.ui \
-    login.ui
+    login.ui \
+    new_account_ui.ui

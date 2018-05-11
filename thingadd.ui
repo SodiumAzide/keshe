@@ -16,8 +16,8 @@
   <widget class="QPushButton" name="Thing_Confirm">
    <property name="geometry">
     <rect>
-     <x>50</x>
-     <y>180</y>
+     <x>209</x>
+     <y>140</y>
      <width>75</width>
      <height>23</height>
     </rect>
@@ -29,8 +29,8 @@
   <widget class="QPushButton" name="Thing_Cancel">
    <property name="geometry">
     <rect>
-     <x>250</x>
-     <y>180</y>
+     <x>290</x>
+     <y>140</y>
      <width>75</width>
      <height>23</height>
     </rect>
@@ -39,13 +39,13 @@
     <string>取消</string>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>90</x>
-     <y>40</y>
+     <x>190</x>
+     <y>30</y>
      <width>191</width>
-     <height>80</height>
+     <height>86</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -104,6 +104,42 @@
      </layout>
     </item>
    </layout>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>54</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>物品标签</string>
+   </property>
+  </widget>
+  <widget class="QScrollArea" name="Thing_Tag_Select">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>30</y>
+     <width>141</width>
+     <height>161</height>
+    </rect>
+   </property>
+   <property name="widgetResizable">
+    <bool>true</bool>
+   </property>
+   <widget class="QWidget" name="scrollAreaWidgetContents_3">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>139</width>
+      <height>159</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>
