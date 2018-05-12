@@ -1,21 +1,35 @@
 #include "login.h"
 #include "ui_login.h"
 #include "ui_new_account_ui.h"
+
 #include <QMessageBox>
 #include <QCryptographicHash>
+#include <QVBoxLayout>
+#include <QDebug>
 extern QString Now_User;
+extern QString DATA_FILE;
+extern map<QString, vector<ll> > TagToThing;
 
+////////////////////////////////////////////////////////////////////////////
 Login::Login(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Login)
 {
     setFixedSize(400, 247);
     setWindowTitle(tr("登陆"));
+    Loaddata();
     ui->setupUi(this);
 }
 
 Login::~Login()
 {
+    QFile Pfile("./password");
+    Pfile.open(QIODevice::WriteOnly|QIODevice::Text);
+    //数据格式：账号 密码 昵称
+    for(auto a:Password){
+        Pfile.write((a.first + " " + a.second.Password + " " + a.second.Name +  "\n").toUtf8());
+    }
+    qDebug("exit");
     delete ui;
 }
 void Login::on_New_Account_clicked() {
@@ -44,27 +58,30 @@ void Login::on_Login_Bot_clicked(){
     }
     ui->Password->clear();
 }
-void Login::regist(QString Acc, QString Pass){
+void Login::regist(QString Acc, QString Pass, QString Name){
     Pass = encrypto(Pass);
-    Password[Acc]=Pass;
+    Password[Acc].Password=Pass;
+    Password[Acc].Name = Name;
 }
 void Login::Loaddata(){
     QFile Pfile("./password");
     Pfile.open(QIODevice::ReadOnly|QIODevice::Text);
-    QString Acc, Pas, _tmp;
+    QString Acc, Pas, name, _tmp;
+    int num;
     while(!Pfile.atEnd()){
-        _tmp = Pfile.readLine().trimmed() ;
-        int space = _tmp.indexOf(" ");
-        Acc = _tmp.mid(0, space-1);
-        Pas = _tmp.mid(space+1);
-        Password[Acc] = Pas;
+        _tmp = Pfile.readLine().trimmed();
+        Acc = _tmp.section(" ", 0, 0);
+        Pas = _tmp.section(" ", 1, 1);
+        name = _tmp.section(" ", 2, 2);
+        Password[Acc].Name=name;
+        Password[Acc].Password=Pas;
     }
 }
 
 int Login::check(QString Acc, QString Pass){
     Pass = encrypto(Pass);
     if(Password.find(Acc)==Password.end()) return 2; // account does not exist;
-    if(Password[Acc] != Pass) return 0; // wrong password;
+    if(Password[Acc].Password != Pass) return 0; // wrong password;
     return 1;
 }
 
@@ -88,12 +105,13 @@ New_Account_ui::~New_Account_ui()
 void New_Account_ui::on_Signin_Bot_clicked(){
     QString acc = ui->Account->text().trimmed();
     QString pass = ui->Password->text().trimmed();
+    QString Name = ui->Name->text().trimmed();
     if(acc == QString("") || pass == QString("")){
         QMessageBox::warning(this, "错误", "账户/密码不能为空", QMessageBox::Yes);
         return;
     }
     if(data->check(acc, pass)==2){
-        data->regist(acc, pass);
+        data->regist(acc, pass, Name);
         //int aaa = Password.size();
         QDialog::accept();
     }
@@ -102,3 +120,4 @@ void New_Account_ui::on_Signin_Bot_clicked(){
         ui->Account->setFocus();
     }
 }
+

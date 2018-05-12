@@ -32,8 +32,8 @@
   <widget class="QPushButton" name="Login_Bot">
    <property name="geometry">
     <rect>
-     <x>60</x>
-     <y>180</y>
+     <x>70</x>
+     <y>150</y>
      <width>75</width>
      <height>23</height>
     </rect>
@@ -45,8 +45,8 @@
   <widget class="QPushButton" name="Login_Cancel">
    <property name="geometry">
     <rect>
-     <x>230</x>
-     <y>180</y>
+     <x>240</x>
+     <y>150</y>
      <width>75</width>
      <height>23</height>
     </rect>
@@ -58,8 +58,8 @@
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>100</x>
-     <y>90</y>
+     <x>110</x>
+     <y>60</y>
      <width>167</width>
      <height>56</height>
     </rect>
@@ -102,8 +102,8 @@
   <widget class="QPushButton" name="New_Account">
    <property name="geometry">
     <rect>
-     <x>220</x>
-     <y>150</y>
+     <x>230</x>
+     <y>120</y>
      <width>51</width>
      <height>20</height>
     </rect>

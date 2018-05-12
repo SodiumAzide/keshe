@@ -12,3 +12,5 @@ typedef long long ll;
 
 static QString Now_User;
 static vector<QString> Tag_Sum{"家电", "地产", "古董", "汽车"};
+static QString DATA_FILE = "./data/data.txt";
+static map<QString, vector<ll> > TagToThing;

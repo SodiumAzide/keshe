@@ -26,17 +26,19 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    thingadd.cpp \
-    login.cpp
+    login.cpp \
+    thing.cpp
 
 HEADERS += \
         mainwindow.h \
-    thingadd.h \
     stdafx.h \
-    login.h
+    login.h \
+    thing.h
 
 FORMS += \
         mainwindow.ui \
     thingadd.ui \
     login.ui \
-    new_account_ui.ui
+    new_account_ui.ui \
+    my_thing.ui \
+    my_thing_sou.ui

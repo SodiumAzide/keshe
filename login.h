@@ -8,10 +8,18 @@
 #ifndef STDAFX_H
 #include "stdafx.h"
 #endif
+#ifndef THING_H
+#include "thing.h"
+#endif
 namespace Ui {
 class Login;
 class New_Account_ui;
+
 }
+
+//////////////////////////////////////
+
+/////////////////////////////////////
 
 class Login : public QDialog
 {
@@ -21,14 +29,19 @@ public:
     explicit Login(QWidget *parent = 0);
     ~Login();
     void login();
-    void regist(QString Acc, QString Pass);
+    void regist(QString Acc, QString Pass, QString Name);
     void change_password();
     void Loaddata();
     int  check(QString Acc, QString Pass);
 
 private:
     Ui::Login *ui;
-    map<QString, QString> Password;
+    struct Detail
+    {
+        Detail() {}
+        QString Password, Name;
+    };
+    map<QString, Detail> Password;
     int addAcc(QString acc, QString pass);
     QString encrypto(QString &pass);
 
@@ -54,4 +67,9 @@ private:
 private slots:
     void on_Signin_Bot_clicked();
 };
+
+
+
+///////////////////////////////////////////////////////////////
+
 #endif // LOGIN_H
