@@ -11,7 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>登陆</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="res.qrc">
+    <normaloff>:/new/icon/C:/Users/kong/Desktop/icon.png</normaloff>:/new/icon/C:/Users/kong/Desktop/icon.png</iconset>
   </property>
   <widget class="QLabel" name="Forget_Password">
    <property name="geometry">
@@ -113,6 +117,25 @@
    </property>
   </widget>
  </widget>
- <resources/>
- <connections/>
+ <resources>
+  <include location="res.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>Login_Cancel</sender>
+   <signal>clicked()</signal>
+   <receiver>Login</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>278</x>
+     <y>164</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>309</x>
+     <y>190</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

@@ -1,14 +1,13 @@
 #include "login.h"
 #include "ui_login.h"
 #include "ui_new_account_ui.h"
+#include "ui_changpass.h"
 
 #include <QMessageBox>
 #include <QCryptographicHash>
 #include <QVBoxLayout>
 #include <QDebug>
-extern QString Now_User;
-extern QString DATA_FILE;
-extern map<QString, vector<ll> > TagToThing;
+
 
 ////////////////////////////////////////////////////////////////////////////
 Login::Login(QWidget *parent) :
@@ -19,6 +18,8 @@ Login::Login(QWidget *parent) :
     setWindowTitle(tr("登陆"));
     Loaddata();
     ui->setupUi(this);
+    ui->Account->setMaxLength(20);
+    ui->Password->setMaxLength(20);
 }
 
 Login::~Login()
@@ -49,6 +50,7 @@ void Login::on_Login_Bot_clicked(){
         return;break;
     case 1:
         Now_User = acc;
+        qDebug() <<"Now User: " << acc;
         accept();
         break;
     case 2:
@@ -67,7 +69,6 @@ void Login::Loaddata(){
     QFile Pfile("./password");
     Pfile.open(QIODevice::ReadOnly|QIODevice::Text);
     QString Acc, Pas, name, _tmp;
-    int num;
     while(!Pfile.atEnd()){
         _tmp = Pfile.readLine().trimmed();
         Acc = _tmp.section(" ", 0, 0);
@@ -88,7 +89,9 @@ int Login::check(QString Acc, QString Pass){
 QString Login::encrypto(QString &pass){
     return QCryptographicHash::hash(pass.toUtf8(), QCryptographicHash::Md5).toHex();
 }
-
+void Login::change_password(){
+    ChangePass *chp = new ChangePass(0, this);
+}
 /////////////////////////////////////////////////////////////////////////////////////////////////
 New_Account_ui::New_Account_ui(QWidget *parent) :
     QDialog(parent),
@@ -96,6 +99,9 @@ New_Account_ui::New_Account_ui(QWidget *parent) :
 {
     setFixedSize(400, 247);
     ui->setupUi(this);
+    ui->Account->setMaxLength(20);
+    ui->Name->setMaxLength(20);
+    ui->Password->setMaxLength(20);
 }
 
 New_Account_ui::~New_Account_ui()
@@ -120,4 +126,39 @@ void New_Account_ui::on_Signin_Bot_clicked(){
         ui->Account->setFocus();
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////////
+ChangePass::ChangePass(QWidget *parent, Login *dat) :
+    QDialog(parent),
+    ui(new Ui::ChangePass)
+{
+    ui->setupUi(this);
+    data = dat;
+    ui->new1->setMaxLength(20);
+    ui->new2->setMaxLength(20);
+    ui->old->setMaxLength(20);
+}
+ChangePass::~ChangePass(){
+    delete ui;
+}
+void ChangePass::on_Confirm_clicked(){
+    qDebug() << "get in";
+    QString new1 = ui->new1->text().trimmed();
+    QString new2 = ui->new2->text().trimmed();
+    QString old  = ui->old->text().trimmed();
+    if(new1 != new2){
+        QMessageBox::warning(this, "密码不一致", "输入的新密码不一致，请检查新密码",QMessageBox::Yes);
+        ui->new1->clear();ui->new2->clear();ui->new1->setFocus();
+        return;
+    }
+    if(data->Password[data->Now_User].Password != encrypto(old)){
+        QMessageBox::warning(this, "验证错误", "输入的旧密码错误，请检查旧密码",QMessageBox::Yes);
+        ui->old->clear();ui->old->setFocus();
+        return;
+    }
+    this->close();
+    data->Password[data->Now_User].Password = encrypto(new1);
+    QMessageBox::warning(this, "成功", "密码修改成功",QMessageBox::Yes);
+}
+QString ChangePass::encrypto(QString &pass){
+    return QCryptographicHash::hash(pass.toUtf8(), QCryptographicHash::Md5).toHex();
+}

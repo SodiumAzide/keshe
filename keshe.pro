@@ -10,6 +10,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = keshe
 TEMPLATE = app
+RC_ICONS = app.ico
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
@@ -40,5 +41,10 @@ FORMS += \
     thingadd.ui \
     login.ui \
     new_account_ui.ui \
-    my_thing.ui \
-    my_thing_sou.ui
+    my_thing_sou.ui \
+    bug_it.ui \
+    help.ui \
+    changpass.ui
+
+RESOURCES += \
+    res.qrc

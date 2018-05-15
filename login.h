@@ -11,12 +11,14 @@
 #ifndef THING_H
 #include "thing.h"
 #endif
+//extern QString DATA_FILE;
+//extern map<QString, vector<ll> > TagToThing;
 namespace Ui {
 class Login;
 class New_Account_ui;
-
+class ChangePass;
 }
-
+//QString DATA_FILE = "./data.txt";
 //////////////////////////////////////
 
 /////////////////////////////////////
@@ -26,6 +28,11 @@ class Login : public QDialog
     Q_OBJECT
 
 public:
+    struct Detail
+    {
+        Detail() {}
+        QString Password, Name;
+    };
     explicit Login(QWidget *parent = 0);
     ~Login();
     void login();
@@ -33,15 +40,11 @@ public:
     void change_password();
     void Loaddata();
     int  check(QString Acc, QString Pass);
+    QString Now_User;
+    map<QString, Detail> Password;
 
 private:
     Ui::Login *ui;
-    struct Detail
-    {
-        Detail() {}
-        QString Password, Name;
-    };
-    map<QString, Detail> Password;
     int addAcc(QString acc, QString pass);
     QString encrypto(QString &pass);
 
@@ -68,7 +71,19 @@ private slots:
     void on_Signin_Bot_clicked();
 };
 
-
+class ChangePass : public QDialog
+{
+    Q_OBJECT
+public:
+    ChangePass(QWidget *parent = 0, Login *dat=0);
+    ~ChangePass();
+    Login* data;
+private:
+    Ui::ChangePass *ui;
+    QString encrypto(QString &pass);
+private slots:
+    void on_Confirm_clicked();
+};
 
 ///////////////////////////////////////////////////////////////
 

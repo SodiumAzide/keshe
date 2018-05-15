@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>598</width>
-    <height>50</height>
+    <width>560</width>
+    <height>61</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,84 +16,95 @@
   <widget class="QLabel" name="Thing_Name">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>10</y>
-     <width>161</width>
+     <x>10</x>
+     <y>20</y>
+     <width>141</width>
      <height>31</height>
     </rect>
    </property>
    <property name="styleSheet">
-    <string notr="true">font: 87 12pt &quot;Arial Black&quot;;
-</string>
+    <string notr="true">font: 11pt &quot;Arial&quot;;
+font: rgb(49, 100, 123)</string>
    </property>
    <property name="text">
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="Start_Money">
-   <property name="geometry">
-    <rect>
-     <x>210</x>
-     <y>10</y>
-     <width>54</width>
-     <height>12</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="Now_Money">
-   <property name="geometry">
-    <rect>
-     <x>310</x>
-     <y>10</y>
-     <width>54</width>
-     <height>12</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="Thing_Num">
-   <property name="geometry">
-    <rect>
-     <x>400</x>
-     <y>10</y>
-     <width>54</width>
-     <height>12</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="Time">
-   <property name="geometry">
-    <rect>
-     <x>240</x>
-     <y>30</y>
-     <width>181</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
   <widget class="QLabel" name="Status">
    <property name="geometry">
     <rect>
-     <x>520</x>
-     <y>10</y>
-     <width>54</width>
-     <height>31</height>
+     <x>470</x>
+     <y>20</y>
+     <width>81</width>
+     <height>21</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
    </property>
    <property name="text">
     <string>TextLabel</string>
    </property>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>10</y>
+     <width>291</width>
+     <height>44</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLabel" name="Start_Money">
+        <property name="styleSheet">
+         <string notr="true">font: 11pt &quot;Arial&quot;;
+font: rgb(49, 100, 123)</string>
+        </property>
+        <property name="text">
+         <string>TextLabel</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="Now_Money">
+        <property name="styleSheet">
+         <string notr="true">font: 11pt &quot;Arial&quot;;
+font: rgb(49, 100, 123)</string>
+        </property>
+        <property name="text">
+         <string>TextLabel</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="Thing_Num">
+        <property name="styleSheet">
+         <string notr="true">font: 11pt &quot;Arial&quot;;
+font: rgb(49, 100, 123)</string>
+        </property>
+        <property name="text">
+         <string>TextLabel</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QLabel" name="Time">
+      <property name="styleSheet">
+       <string notr="true">font: 11pt &quot;Arial&quot;;
+font: rgb(49, 100, 123)</string>
+      </property>
+      <property name="text">
+       <string>TextLabel</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
  </widget>
  <resources/>
