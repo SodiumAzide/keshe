@@ -41,13 +41,15 @@ void Thing::Save_data(){
     fdata.write(QString("\n").toUtf8());
     QString bl = QString(" ");
     for(auto a:DATA){
-        qDebug() << "Backuping   " << a.belonger;
+        //qDebug() << "Backuping   " << a.belonger;
         fdata.write((a.Thing_name.trimmed() + bl + a.belonger + bl).toUtf8());
         fdata.write((QString::number(a.money) + bl + QString::number(a.Thing_num) + bl + \
                      QString::number(a.start_time) + bl + QString::number(a.end_time) + bl + \
                      QString::number(a.now_money) + bl).toUtf8());
         fdata.write((a.describe.trimmed() + QString(".") + bl + a.buyer.trimmed()).toUtf8());
-        qDebug() << (a.describe.trimmed() + QString(".") + bl + a.buyer.trimmed())<< "   Save data, describe";
+        //qDebug() << (a.describe.trimmed() + QString(".") + bl + a.buyer.trimmed())<< "   Save data, describe";
+        fdata.write("\n");
+        fdata.write(a.record.replace("\n", "\\").toUtf8() );
         fdata.write("\n");
     }
     fdata.close();
@@ -71,11 +73,12 @@ void Thing::Load_data(){
         (tmpp.end_time = tmp.section(" ", 5, 5).toInt());
         (tmpp.now_money = tmp.section(" ", 6, 6).toLongLong());
         tmpp.describe = tmp.section(" ", 7, 7);
-        qDebug() << (tmpp.buyer = tmp.section(" ", 8, 8));
+        (tmpp.buyer = tmp.section(" ", 8, 8));
         tmpp.describe = tmpp.describe.left(tmpp.describe.length() - 1);
+        tmpp.record = fdata.readLine().trimmed().replace("\\", "\n");
         DATA.push_back(tmpp);
     }
-    qDebug() << "Finished loading data";
+    //qDebug() << "Finished loading data";
 }
 void Thing::addThing(){
     ThingAdd _add_tmp(0, Now_User);
@@ -86,20 +89,24 @@ void Thing::addThing(){
         QString name_tmp=_add_tmp.Thing_name, des = _add_tmp.desctibe.replace(" ", "").replace("\n", "")\
                 .replace("\r", "").replace("\t", "");
         ll money=_add_tmp.money, ttime=_add_tmp.time;
-        qDebug() << Now_User << "  79";
+        //qDebug() << Now_User << "  79";
         DATA.push_back(things(name_tmp, Now_User, money, Num, ttime, ttime + 5 * 60, des));
         wait = 1;
         Num++;
     }
 }
-QVBoxLayout* Thing::Show(QString User, bool OnlyMine, bool Not_finished){
+QVBoxLayout* Thing::Show(QString User, bool OnlyMine, bool Not_finished, ll *aaaa){
 
     QVBoxLayout *ne = new QVBoxLayout();
     ll now_time = QDateTime::currentDateTime().toTime_t();
     ne->setSpacing(7);
+    for(int i=0; i<9; i++)aaaa[i]=0;
     for(auto a:DATA){
         if(OnlyMine && a.belonger != Now_User)continue;
-        if(Not_finished && now_time > a.end_time)continue;
+        if(Not_finished && now_time > a.end_time){
+            //qDebug() << now_time << a.end_time << "time";
+            continue;
+        }
         if(User == QString("")||User == a.belonger || QString(a.buyer).contains(User) || \
                 a.Thing_name.contains(User, Qt::CaseInsensitive) || QString::number(a.Thing_num).contains(User) ||\
                 a.describe.contains(User)){
@@ -112,6 +119,14 @@ QVBoxLayout* Thing::Show(QString User, bool OnlyMine, bool Not_finished){
             one->setMinimumSize(560, 60);
             one->setGraphicsEffect(shadow_effect);
             ne->addWidget(one);
+            aaaa[0]++;
+            if(now_time<a.start_time)aaaa[1]++;
+            else if(now_time<a.end_time)aaaa[2]++;
+            else{
+                aaaa[3]++;
+                if(a.buyer.trimmed() == "")aaaa[4]++, aaaa[6]+=a.money;
+                else aaaa[5]++, aaaa[7]+=a.now_money;
+            }
         }
     }
     ne->addStretch();
@@ -194,10 +209,12 @@ void My_Thing_Sou::mouseReleaseEvent(QMouseEvent *event)
 }
 void My_Thing_Sou::Update(ll num){
     ll money;QString name;
+    ll now_time = QDateTime::currentDateTime().toTime_t();
     for(auto &tmpp : (db->DATA)){
         if(tmpp.Thing_num == num){
             start_time = tmpp.start_time, now_money = tmpp.now_money, stop_time = tmpp.end_time;money=tmpp.money;
             name = tmpp.Thing_name;buyer = tmpp.buyer;
+            //qDebug() << tmpp.now_money;
             break;
         }
     }
@@ -227,7 +244,6 @@ void My_Thing_Sou::Myshow()
         }
         ui->Status->setText(QString("End"));
         ui->Status->setStyleSheet("font: 11pt \"Arial\";font: rgb(106, 14, 36)");
-
     }
 }
 
@@ -237,7 +253,7 @@ Bug_it::Bug_it(QWidget *parent, Thing *datebase, QString Now_) :
     QDialog(parent),
     ui(new Ui::Bug_it)
 {
-    setFixedSize(455, 326);
+    setFixedSize(478, 376);
     Now_User = Now_;
     ui->setupUi(this);
     ui->Add_Price->setMaxLength(12);
@@ -252,7 +268,8 @@ Bug_it::~Bug_it(){
     for(auto &tmpp : (db->DATA)){
         if(tmpp.Thing_num == _num){
             //qDebug() << "changing";
-            tmpp.now_money = now_money;tmpp.end_time=stop_time;
+            tmpp.now_money = now_money;
+            tmpp.end_time=stop_time;
             break;
         }
     }
@@ -276,6 +293,7 @@ void Bug_it::data_update(){
         ll rest = start_time - now_time;
         ui->lcdNumber->display(ll_to_time(rest));
         ui->Add_Price->setEnabled(0);
+        ui->HigerPrice->setEnabled(0);
     }else if(now_time < stop_time){
         ui->Time_Status->setText("距离结束还有");
         ui->lcdNumber->display(ll_to_time(stop_time - now_time));
@@ -285,6 +303,7 @@ void Bug_it::data_update(){
         ui->lcdNumber->display("0:0:0");
         ui->Add_Price->setEnabled(0);
         ui->HigerPrice->setEnabled(0);
+        ui->record->append("已结束");
     }
     ui->Now_Money->setText(QString("当前价格:") + QString::number(now_money));
 }
@@ -299,13 +318,20 @@ void Bug_it::Update(ll num){
     _num = num;
     for(auto tmp : db->DATA){
         if(tmp.Thing_num == num){
-            now_money = tmp.now_money;stop_time = tmp.end_time;now_money=tmp.now_money;_num = tmp.Thing_num;
-            start_time = tmp.start_time;belonger = tmp.belonger;describe=tmp.describe;Thing_name=tmp.Thing_name;
+            now_money = tmp.now_money;
+            stop_time = tmp.end_time;
+            start_money=tmp.money;
+            _num = tmp.Thing_num;
+            start_time = tmp.start_time;
+            belonger = tmp.belonger;
+            describe=tmp.describe;
+            Thing_name=tmp.Thing_name;
             //qDebug() << tmp.belonger << "  " << belonger << "    debug";
             ui->Thing_Name->setText(QString("物品名称:") + tmp.Thing_name);
             ui->Start_Money->setText(QString("起步价:") + QString::number(tmp.money));
             ui->payer->setText(QString("出价人:") + tmp.buyer.trimmed());
             ui->textBrowser->setPlainText(describe);
+            ui->record->setPlainText(tmp.record);
             //ui->Buyer->setText(buyer);
             break;
         }
@@ -315,8 +341,8 @@ void Bug_it::Update(ll num){
 void Bug_it::on_HigerPrice_clicked(){
     bool ok=0;
     ll add = ui->Add_Price->text().toLongLong(&ok);
-    if(ui->Add_Price->text().isEmpty() || !ok){
-        QMessageBox::warning(this, "错误", "请检查输入", QMessageBox::Yes);
+    if(ui->Add_Price->text().isEmpty() || !ok || add == 0){
+        QMessageBox::warning(this, "错误", "请检查输入,价格必须为大于0的数", QMessageBox::Yes);
         return;
     }
     for(auto &tmp : db->DATA){
@@ -327,12 +353,13 @@ void Bug_it::on_HigerPrice_clicked(){
             tmp.end_time = QDateTime::currentDateTime().currentDateTime().toTime_t() + 5 * 60;//delate for 5 min
             ui->Add_Price->clear();
             db->Inform = QString("用户:%1 在商品%2出价%3元").arg(Now_User).arg(tmp.Thing_name).arg(tmp.now_money);
+            tmp.record += QString("%3 %1 出价%2元\n").arg(Now_User).arg(tmp.now_money).arg(QTime::currentTime().toString("hh:mm"));
             break;
         }
     }
 }
 void Bug_it::on_Data_Edit_clicked(){
-    this->close();
+    //this->close();
     ThingAdd *tmp = new ThingAdd;
     //tmp->setFixedSize(455, 326);
     tmp->Thing_Edit(Thing_name, start_money, start_time, describe);
@@ -349,10 +376,13 @@ void Bug_it::on_Data_Edit_clicked(){
             for(auto &tmpp : (db->DATA)){
                 if(tmpp.Thing_num == _num){
                     //qDebug() << "Save";
-                    tmpp.money=tmp->money,tmpp.now_money=tmp->money;
-                    tmpp.start_time=tmp->time,tmpp.Thing_name=tmp->Thing_name;tmpp.end_time = tmp->time + 5 * 60;
-                    tmpp.describe=tmp->ui->textEdit->toPlainText().replace("\n", "").replace("\r", "").replace("\t", "");
-                    //qDebug() << tmpp.end_time << "   end time";
+                    (tmpp.money=tmp->money);
+                    (tmpp.now_money=tmp->money);
+                    tmpp.start_time=tmp->time;
+                    tmpp.Thing_name=tmp->Thing_name;
+                    tmpp.end_time = tmp->time + 5 * 60;
+                    tmpp.describe=tmp->ui->textEdit->toPlainText().replace("\n", ".").replace("\r", ".").replace("\t", ".");
+                    //qDebug() << tmpp.now_money << "   money";
                     break;
                 }
             }
@@ -376,18 +406,4 @@ help::help(QWidget *parent):
 }
 help::~help(){
     delete ui;
-}/*
-void help::paintEvent(QPaintEvent *)
-{
-QPainter painter(this);
-QPixmap pix;
-pix.load(":/new/icon/icon.png");
-painter.drawPixmap(0,0,100,100,pix);
-
-    qreal width = pix.width(); //获得以前图片的宽和高
-    qreal height = pix.height();
-
-    pix = pix.scaled(width*2,height*2,Qt::KeepAspectRatio);
-    //将图片的宽和高都扩大两倍，并且在给定的矩形内保持宽高的比值
-    painter.drawPixmap(100,100,pix);
-}*/
+}

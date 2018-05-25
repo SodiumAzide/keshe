@@ -37,7 +37,7 @@ public:
             now_money = Money;
             describe = des;
         }
-        QString Thing_name, belonger, buyer, describe;
+        QString Thing_name, belonger, buyer, describe, record;
         ll Thing_num, money, now_money, start_time, end_time;
         bool is_end;
 
@@ -48,7 +48,7 @@ public:
     vector<things> DATA;
     void Save_data();
     void Load_data();
-    QVBoxLayout* Show(QString User, bool OnlyMine, bool Not_finished);//search in the meantime
+    QVBoxLayout* Show(QString User, bool OnlyMine, bool Not_finished, ll *aaaa);//search in the meantime
     QString Now_User;
     QTimer *minu, *seco;
     QString Inform="";
